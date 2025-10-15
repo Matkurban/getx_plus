@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
+import 'package:getx_plus/get.dart';
 
 void main() {
-  testWidgets("test if Get.isSnackbarOpen works with Get.snackbar",
-      (tester) async {
+  testWidgets("test if Get.isSnackbarOpen works with Get.snackbar", (tester) async {
     await tester.pumpWidget(
       GetMaterialApp(
         popGesture: true,
@@ -15,8 +14,7 @@ void main() {
               'title',
               "message",
               duration: const Duration(seconds: 1),
-              mainButton:
-                  TextButton(onPressed: () {}, child: const Text('button')),
+              mainButton: TextButton(onPressed: () {}, child: const Text('button')),
               isDismissible: false,
             );
           },
@@ -81,10 +79,8 @@ void main() {
         home: ElevatedButton(
           child: const Text('Open Snackbar'),
           onPressed: () {
-            Get.rawSnackbar(
-                messageText: messageOne, duration: const Duration(seconds: 1));
-            Get.rawSnackbar(
-                messageText: messageTwo, duration: const Duration(seconds: 1));
+            Get.rawSnackbar(messageText: messageOne, duration: const Duration(seconds: 1));
+            Get.rawSnackbar(messageText: messageTwo, duration: const Duration(seconds: 1));
           },
         ),
       ),

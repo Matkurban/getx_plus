@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_classes_with_only_static_members
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
+import 'package:getx_plus/get.dart';
 
 import 'util/matcher.dart' as m;
 
@@ -55,12 +55,9 @@ void main() {
     final instance = Get.put<Controller>(Controller(), tag: 'one');
     final instance2 = Get.put<Controller>(Controller(), tag: 'two');
     expect(instance == instance2, false);
-    expect(Get.find<Controller>(tag: 'one') == Get.find<Controller>(tag: 'two'),
-        false);
-    expect(Get.find<Controller>(tag: 'one') == Get.find<Controller>(tag: 'one'),
-        true);
-    expect(Get.find<Controller>(tag: 'two') == Get.find<Controller>(tag: 'two'),
-        true);
+    expect(Get.find<Controller>(tag: 'one') == Get.find<Controller>(tag: 'two'), false);
+    expect(Get.find<Controller>(tag: 'one') == Get.find<Controller>(tag: 'one'), true);
+    expect(Get.find<Controller>(tag: 'two') == Get.find<Controller>(tag: 'two'), true);
     Get.reset();
   });
 
@@ -68,12 +65,9 @@ void main() {
     Get.lazyPut<Controller>(() => Controller(), tag: 'one');
     Get.lazyPut<Controller>(() => Controller(), tag: 'two');
 
-    expect(Get.find<Controller>(tag: 'one') == Get.find<Controller>(tag: 'two'),
-        false);
-    expect(Get.find<Controller>(tag: 'one') == Get.find<Controller>(tag: 'one'),
-        true);
-    expect(Get.find<Controller>(tag: 'two') == Get.find<Controller>(tag: 'two'),
-        true);
+    expect(Get.find<Controller>(tag: 'one') == Get.find<Controller>(tag: 'two'), false);
+    expect(Get.find<Controller>(tag: 'one') == Get.find<Controller>(tag: 'one'), true);
+    expect(Get.find<Controller>(tag: 'two') == Get.find<Controller>(tag: 'two'), true);
     Get.reset();
   });
 
@@ -101,8 +95,7 @@ void main() {
 
     expect(Get.find<Controller>().count, 1);
     Get.delete<Controller>();
-    expect(
-        () => Get.find<Controller>(), throwsA(const m.TypeMatcher<String>()));
+    expect(() => Get.find<Controller>(), throwsA(const m.TypeMatcher<String>()));
     Get.reset();
   });
 
@@ -162,12 +155,10 @@ void main() {
     test('Get.delete test with disposable controller', () async {
       // Get.put(DisposableController());
       expect(Get.delete<DisposableController>(), true);
-      expect(() => Get.find<DisposableController>(),
-          throwsA(const m.TypeMatcher<String>()));
+      expect(() => Get.find<DisposableController>(), throwsA(const m.TypeMatcher<String>()));
     });
 
-    test('Get.put test after delete with disposable controller and init check',
-        () async {
+    test('Get.put test after delete with disposable controller and init check', () async {
       final instance = Get.put<DisposableController>(DisposableController());
       expect(instance, Get.find<DisposableController>());
       expect(instance.initialized, true);

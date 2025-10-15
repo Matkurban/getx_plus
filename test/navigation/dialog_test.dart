@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
+import 'package:getx_plus/get.dart';
 
 import 'utils/wrapper.dart';
 
@@ -12,8 +12,7 @@ void main() {
 
     await tester.pump();
 
-    Get.defaultDialog(
-        onConfirm: () {}, middleText: "Dialog made in 3 lines of code");
+    Get.defaultDialog(onConfirm: () {}, middleText: "Dialog made in 3 lines of code");
 
     await tester.pumpAndSettle();
 
@@ -75,8 +74,7 @@ void main() {
   });
 
   group("Get.closeDialog", () {
-    testWidgets("Get.closeDialog - closes dialog and returns value",
-        (tester) async {
+    testWidgets("Get.closeDialog - closes dialog and returns value", (tester) async {
       await tester.pumpWidget(
         Wrapper(child: Container()),
       );
@@ -102,8 +100,7 @@ void main() {
       await tester.pumpAndSettle();
     });
 
-    testWidgets("Get.closeDialog - does not close bottomsheets",
-        (tester) async {
+    testWidgets("Get.closeDialog - does not close bottomsheets", (tester) async {
       await tester.pumpWidget(
         Wrapper(child: Container()),
       );

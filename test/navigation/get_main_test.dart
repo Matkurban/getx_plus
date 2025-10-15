@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
+import 'package:getx_plus/get.dart';
 
 import 'utils/wrapper.dart';
 
@@ -47,8 +47,7 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(Get.rootController.rootDelegate.currentConfiguration?.route?.name,
-        '/404');
+    expect(Get.rootController.rootDelegate.currentConfiguration?.route?.name, '/404');
   });
 
   testWidgets("Get.off navigates to provided route", (tester) async {
@@ -168,8 +167,7 @@ void main() {
     expect(find.byType(FirstScreen), findsNothing);
   });
 
-  testWidgets("Get.offAllNamed navigates to provided named route",
-      (tester) async {
+  testWidgets("Get.offAllNamed navigates to provided named route", (tester) async {
     await tester.pumpWidget(WrapperNamed(
       initialRoute: '/first',
       namedRoutes: [
@@ -260,16 +258,14 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    Get.offUntil(
-        () => const ThirdScreen(), (route) => route.name == '/FirstScreen');
+    Get.offUntil(() => const ThirdScreen(), (route) => route.name == '/FirstScreen');
 
     await tester.pumpAndSettle();
 
     expect(find.byType(ThirdScreen), findsOneWidget);
   });
 
-  testWidgets("Get.until removes each route that meet the predicate",
-      (tester) async {
+  testWidgets("Get.until removes each route that meet the predicate", (tester) async {
     await tester.pumpWidget(WrapperNamed(
       initialRoute: '/first',
       namedRoutes: [
@@ -294,17 +290,14 @@ void main() {
     expect(find.byType(ThirdScreen), findsNothing);
   });
 
-  testWidgets(
-      "Get.offUntil removes previous routes if they don't match predicate",
-      (tester) async {
+  testWidgets("Get.offUntil removes previous routes if they don't match predicate", (tester) async {
     await tester.pumpWidget(Wrapper(child: Container()));
 
     Get.to(() => const FirstScreen());
     await tester.pumpAndSettle();
     Get.to(() => const SecondScreen());
     await tester.pumpAndSettle();
-    Get.offUntil(
-        () => const ThirdScreen(), (route) => route.name == '/FirstScreen');
+    Get.offUntil(() => const ThirdScreen(), (route) => route.name == '/FirstScreen');
     await tester.pumpAndSettle();
     Get.back();
 
@@ -313,17 +306,14 @@ void main() {
     expect(find.byType(SecondScreen), findsNothing);
   });
 
-  testWidgets(
-      "Get.offUntil leaves previous routes that match provided predicate",
-      (tester) async {
+  testWidgets("Get.offUntil leaves previous routes that match provided predicate", (tester) async {
     await tester.pumpWidget(Wrapper(child: Container()));
 
     Get.to(() => const FirstScreen());
     await tester.pumpAndSettle();
     Get.to(() => const SecondScreen());
     await tester.pumpAndSettle();
-    Get.offUntil(
-        () => const ThirdScreen(), (route) => route.name == '/FirstScreen');
+    Get.offUntil(() => const ThirdScreen(), (route) => route.name == '/FirstScreen');
     await tester.pumpAndSettle();
     Get.back();
 
@@ -463,8 +453,7 @@ void main() {
     expect(find.byType(SecondScreen), findsOneWidget);
   });
 
-  testWidgets(
-      "Get.offNamedUntil removes previous routes if they don't match predicate",
+  testWidgets("Get.offNamedUntil removes previous routes if they don't match predicate",
       (tester) async {
     await tester.pumpWidget(WrapperNamed(
       initialRoute: '/first',
@@ -484,8 +473,7 @@ void main() {
     expect(find.byType(SecondScreen), findsNothing);
   });
 
-  testWidgets(
-      "Get.offNamedUntil leaves previous routes that match provided predicate",
+  testWidgets("Get.offNamedUntil leaves previous routes that match provided predicate",
       (tester) async {
     await tester.pumpWidget(WrapperNamed(
       initialRoute: '/first',
@@ -529,9 +517,7 @@ void main() {
     expect(find.byType(FirstScreen), findsOneWidget);
   });
 
-  testWidgets(
-      "Get.back with closeOverlays pops both snackbar and current route",
-      (tester) async {
+  testWidgets("Get.back with closeOverlays pops both snackbar and current route", (tester) async {
     await tester.pumpWidget(
       Wrapper(
         defaultTransition: Transition.circularReveal,

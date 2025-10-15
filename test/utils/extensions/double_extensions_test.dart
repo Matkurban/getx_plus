@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/utils.dart';
+import 'package:getx_plus/utils.dart';
 
 void main() {
   group('DoubleExt', () {
@@ -13,8 +13,7 @@ void main() {
 
     test('milliseconds', () {
       expect(1000.0.ms, equals(const Duration(milliseconds: 1000)));
-      expect(
-          1.5.ms, equals(const Duration(milliseconds: 1, microseconds: 500)));
+      expect(1.5.ms, equals(const Duration(milliseconds: 1, microseconds: 500)));
       expect((-2000.0).ms, equals(const Duration(milliseconds: -2000)));
     });
 

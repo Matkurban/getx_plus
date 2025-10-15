@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/state_manager.dart';
+import 'package:getx_plus/state_manager.dart';
 
 int times = 30;
 
@@ -65,8 +65,7 @@ Future<int> stream() {
   value.stream.listen((v) {
     if (times == v) {
       timer.stop();
-      printValue(
-          """$v listeners notified | [STREAM] time: ${timer.elapsedMicroseconds}ms""");
+      printValue("""$v listeners notified | [STREAM] time: ${timer.elapsedMicroseconds}ms""");
       c.complete(timer.elapsedMicroseconds);
       value.close();
     }
@@ -113,8 +112,7 @@ Future<int> miniStream() {
   value.listen((v) {
     if (times == v) {
       timer.stop();
-      printValue(
-          """$v listeners notified | [MINI_STREAM] time: ${timer.elapsedMicroseconds}ms""");
+      printValue("""$v listeners notified | [MINI_STREAM] time: ${timer.elapsedMicroseconds}ms""");
       c.complete(timer.elapsedMicroseconds);
     }
   });
