@@ -76,18 +76,34 @@ void main() {
 
   test('Parse Page without children', () {
     final pageTree = [
-      GetPage(name: '/city', page: () => Container(), transition: Transition.cupertino),
-      GetPage(name: '/city/home', page: () => Container(), transition: Transition.downToUp),
-      GetPage(name: '/city/home/bed-room', page: () => Container(), transition: Transition.fade),
       GetPage(
-          name: '/city/home/living-room', page: () => Container(), transition: Transition.fadeIn),
-      GetPage(name: '/city/work', page: () => Container(), transition: Transition.leftToRight),
+          name: '/city',
+          page: () => Container(),
+          transition: Transition.cupertino),
+      GetPage(
+          name: '/city/home',
+          page: () => Container(),
+          transition: Transition.downToUp),
+      GetPage(
+          name: '/city/home/bed-room',
+          page: () => Container(),
+          transition: Transition.fade),
+      GetPage(
+          name: '/city/home/living-room',
+          page: () => Container(),
+          transition: Transition.fadeIn),
+      GetPage(
+          name: '/city/work',
+          page: () => Container(),
+          transition: Transition.leftToRight),
       GetPage(
           name: '/city/work/office',
           page: () => Container(),
           transition: Transition.leftToRightWithFade),
       GetPage(
-          name: '/city/work/office/pen', page: () => Container(), transition: Transition.native),
+          name: '/city/work/office/pen',
+          page: () => Container(),
+          transition: Transition.native),
       GetPage(
           name: '/city/work/office/paper',
           page: () => Container(),
@@ -174,7 +190,10 @@ void main() {
       ));
 
       // Get.parameters = ({"varginias": "varginia", "vinis": "viniiss"});
-      var parameters = <String, String>{"varginias": "varginia", "vinis": "viniiss"};
+      var parameters = <String, String>{
+        "varginias": "varginia",
+        "vinis": "viniiss"
+      };
       // print("Get.parameters: ${Get.parameters}");
       parameters.addAll({"a": "b", "c": "d"});
       Get.toNamed("/italy", parameters: parameters);

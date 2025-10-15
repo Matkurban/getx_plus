@@ -5,7 +5,8 @@ void main() {
   group('DurationExt', () {
     test('seconds', () {
       expect(1.seconds, equals(const Duration(seconds: 1)));
-      expect(2.5.seconds, equals(const Duration(seconds: 2, milliseconds: 500)));
+      expect(
+          2.5.seconds, equals(const Duration(seconds: 2, milliseconds: 500)));
       expect((-1).seconds, equals(const Duration(seconds: -1)));
     });
 

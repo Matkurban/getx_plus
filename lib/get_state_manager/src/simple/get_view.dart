@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
+import 'package:getx_plus/instance_manager.dart';
+import 'package:getx_plus/utils.dart';
 
-import '../../../instance_manager.dart';
-import '../../../utils.dart';
 import 'get_state.dart';
 import 'get_widget_cache.dart';
 

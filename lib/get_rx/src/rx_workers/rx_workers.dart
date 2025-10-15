@@ -1,8 +1,9 @@
 import 'dart:async';
 
-import '../../../get_core/get_core.dart';
-import '../../../get_state_manager/src/rx_flutter/rx_notifier.dart';
-import '../rx_types/rx_types.dart';
+import 'package:getx_plus/get_core/get_core.dart';
+import 'package:getx_plus/get_rx/src/rx_types/rx_types.dart';
+import 'package:getx_plus/get_state_manager/src/rx_flutter/rx_notifier.dart';
+
 import 'utils/debouncer.dart';
 
 bool _conditional(dynamic condition) {

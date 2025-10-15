@@ -1,4 +1,4 @@
-class GeneralPlatform {
+sealed class GeneralPlatform {
   static bool get isWeb => throw UnimplementedError();
 
   static bool get isMacOS => throw UnimplementedError();

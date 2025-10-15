@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import '../http.dart';
-import '../multipart/form_data.dart';
+import 'package:getx_plus/get_connect/http/src/http.dart';
+import 'package:getx_plus/get_connect/http/src/multipart/form_data.dart';
 
-class Request<T> {
-  /// Headers attach to this [Request]
+class GetxRequest<T> {
+  /// Headers attach to this [GetxRequest]
   final Map<String, String> headers;
 
   /// The [Uri] from request
@@ -16,16 +16,16 @@ class Request<T> {
 
   final ResponseInterceptor<T>? responseInterceptor;
 
-  /// The Http Method from this [Request]
+  /// The Http Method from this [GetxRequest]
   /// ex: `GET`,`POST`,`PUT`,`DELETE`
   final String method;
 
   final int? contentLength;
 
-  /// The BodyBytesStream of body from this [Request]
+  /// The BodyBytesStream of body from this [GetxRequest]
   final Stream<List<int>> bodyBytes;
 
-  /// When true, the client will follow redirects to resolves this [Request]
+  /// When true, the client will follow redirects to resolves this [GetxRequest]
   final bool followRedirects;
 
   /// The maximum number of redirects if [followRedirects] is true.
@@ -35,7 +35,7 @@ class Request<T> {
 
   final FormData? files;
 
-  const Request._({
+  const GetxRequest._({
     required this.method,
     required this.bodyBytes,
     required this.url,
@@ -49,7 +49,7 @@ class Request<T> {
     this.responseInterceptor,
   });
 
-  factory Request({
+  factory GetxRequest({
     required Uri url,
     required String method,
     required Map<String, String> headers,
@@ -65,7 +65,7 @@ class Request<T> {
     if (followRedirects) {
       assert(maxRedirects > 0);
     }
-    return Request._(
+    return GetxRequest._(
         url: url,
         method: method,
         bodyBytes: bodyBytes ??= <int>[].toStream(),
@@ -79,7 +79,7 @@ class Request<T> {
         responseInterceptor: responseInterceptor);
   }
 
-  Request<T> copyWith({
+  GetxRequest<T> copyWith({
     Uri? url,
     String? method,
     Map<String, String>? headers,
@@ -98,7 +98,7 @@ class Request<T> {
       headers.addAll(this.headers);
     }
 
-    return Request<T>._(
+    return GetxRequest<T>._(
         url: url ?? this.url,
         method: method ?? this.method,
         bodyBytes: bodyBytes ?? this.bodyBytes,

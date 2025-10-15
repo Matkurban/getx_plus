@@ -5,7 +5,8 @@ void main() {
   test('String test', () {
     var value = 'string';
     var expected = '';
-    void logFunction(String prefix, dynamic value, String info, {bool isError = false}) {
+    void logFunction(String prefix, dynamic value, String info,
+        {bool isError = false}) {
       expected = '$prefix $value $info'.trim();
     }
 
@@ -15,7 +16,8 @@ void main() {
   test('Int test', () {
     var value = 1;
     var expected = '';
-    void logFunction(String prefix, dynamic value, String info, {bool isError = false}) {
+    void logFunction(String prefix, dynamic value, String info,
+        {bool isError = false}) {
       expected = '$prefix $value $info'.trim();
     }
 
@@ -25,7 +27,8 @@ void main() {
   test('Double test', () {
     var value = 1.0;
     var expected = '';
-    void logFunction(String prefix, dynamic value, String info, {bool isError = false}) {
+    void logFunction(String prefix, dynamic value, String info,
+        {bool isError = false}) {
       expected = '$prefix $value $info'.trim();
     }
 

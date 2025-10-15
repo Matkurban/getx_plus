@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:js_interop';
 
+import 'package:getx_plus/get.dart';
 import 'package:web/web.dart' as html;
 
-import '../../../get_core/get_core.dart';
 import 'socket_notifier.dart';
 
 class BaseWebSocket {

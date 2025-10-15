@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:io' as io;
 
-import '../../certificates/certificates.dart';
-import '../../exceptions/exceptions.dart';
-import '../../request/request.dart';
-import '../../response/client_response.dart';
-import '../../response/response.dart';
-import '../interface/request_base.dart';
-import '../utils/body_decoder.dart';
+import 'package:getx_plus/get_connect/http/src/certificates/certificates.dart';
+import 'package:getx_plus/get_connect/http/src/exceptions/exceptions.dart';
+import 'package:getx_plus/get_connect/http/src/http/interface/request_base.dart';
+import 'package:getx_plus/get_connect/http/src/http/utils/body_decoder.dart';
+import 'package:getx_plus/get_connect/http/src/request/getx_request.dart';
+import 'package:getx_plus/get_connect/http/src/response/client_response.dart';
+import 'package:getx_plus/get_connect/http/src/response/getx_response.dart';
 
 class IoRedirectInfo implements RedirectInfo {
   final io.RedirectInfo _redirectInfo;
@@ -384,7 +384,7 @@ class HttpRequestImpl extends IClient {
   }
 
   @override
-  Future<Response<T>> send<T>(Request<T> request) async {
+  Future<GetxResponse<T>> send<T>(GetxRequest<T> request) async {
     var stream = request.bodyBytes.asBroadcastStream();
     io.HttpClientRequest? ioRequest;
     try {
@@ -420,7 +420,7 @@ class HttpRequestImpl extends IClient {
         response.headers.contentType?.mimeType,
       );
 
-      return Response(
+      return GetxResponse(
         headers: headers,
         request: request,
         statusCode: response.statusCode,

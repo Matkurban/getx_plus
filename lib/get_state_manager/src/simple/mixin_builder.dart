@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:getx_plus/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-import '../rx_flutter/rx_obx_widget.dart';
 import 'get_controllers.dart';
 import 'get_state.dart';
 

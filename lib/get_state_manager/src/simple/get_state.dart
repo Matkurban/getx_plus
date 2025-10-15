@@ -1,11 +1,9 @@
-// ignore_for_file: overridden_fields
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:getx_plus/get_state_manager/get_state_manager.dart';
+import 'package:getx_plus/instance_manager.dart';
 
-import '../../../instance_manager.dart';
-import '../../get_state_manager.dart';
 import 'list_notifier.dart';
 
 typedef InitBuilder<T> = T Function();

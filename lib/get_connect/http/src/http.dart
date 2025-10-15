@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 
-import '../src/certificates/certificates.dart';
-import '../src/exceptions/exceptions.dart';
-import '../src/multipart/form_data.dart';
-import '../src/request/request.dart';
-import '../src/response/response.dart';
-import '../src/status/http_status.dart';
+import 'package:getx_plus/get_connect/http/src/certificates/certificates.dart';
+import 'package:getx_plus/get_connect/http/src/exceptions/exceptions.dart';
+import 'package:getx_plus/get_connect/http/src/multipart/form_data.dart';
+import 'package:getx_plus/get_connect/http/src/request/getx_request.dart';
+import 'package:getx_plus/get_connect/http/src/response/getx_response.dart';
+import 'package:getx_plus/get_connect/http/src/status/http_status.dart';
+
 import 'http/interface/request_base.dart';
 import 'http/request/http_request.dart';
 import 'interceptors/get_modifiers.dart';
@@ -16,8 +17,8 @@ typedef Decoder<T> = T Function(dynamic data);
 
 typedef Progress = Function(double percent);
 
-typedef ResponseInterceptor<T> = Future<Response<T>?> Function(
-    Request<T> request, Type targetType, HttpClientResponse response);
+typedef ResponseInterceptor<T> = Future<GetxResponse<T>?> Function(
+    GetxRequest<T> request, Type targetType, HttpClientResponse response);
 
 class GetHttpClient {
   String userAgent;
@@ -99,7 +100,7 @@ class GetHttpClient {
     return uri;
   }
 
-  Future<Request<T>> _requestWithBody<T>(
+  Future<GetxRequest<T>> _requestWithBody<T>(
     String? url,
     String? contentType,
     dynamic body,
@@ -158,7 +159,7 @@ class GetHttpClient {
     }
 
     final uri = createUri(url, query);
-    return Request<T>(
+    return GetxRequest<T>(
         method: method,
         url: uri,
         headers: headers,
@@ -207,7 +208,7 @@ class GetHttpClient {
     }
   }
 
-  Future<Response<T>> _performRequest<T>(
+  Future<GetxResponse<T>> _performRequest<T>(
     HandlerExecute<T> handler, {
     bool authenticate = false,
     int requestNumber = 1,
@@ -242,7 +243,7 @@ class GetHttpClient {
         if (!errorSafety) {
           throw UnauthorizedException();
         } else {
-          return Response<T>(
+          return GetxResponse<T>(
             request: newRequest,
             headers: newResponse.headers,
             statusCode: newResponse.statusCode,
@@ -259,7 +260,7 @@ class GetHttpClient {
       if (!errorSafety) {
         throw GetHttpException(err.toString());
       } else {
-        return Response<T>(
+        return GetxResponse<T>(
           request: newRequest,
           headers: null,
           statusCode: null,
@@ -270,7 +271,7 @@ class GetHttpClient {
     }
   }
 
-  Future<Request<T>> _get<T>(
+  Future<GetxRequest<T>> _get<T>(
     String url,
     String? contentType,
     Map<String, dynamic>? query,
@@ -281,7 +282,7 @@ class GetHttpClient {
     _setSimpleHeaders(headers, contentType);
     final uri = createUri(url, query);
 
-    return Future.value(Request<T>(
+    return Future.value(GetxRequest<T>(
       method: 'get',
       url: uri,
       headers: headers,
@@ -300,11 +301,11 @@ class GetHttpClient {
     return defaultInterceptor != null
         ? (request, targetType, response) async =>
             await defaultInterceptor(request, targetType, response)
-                as Response<T>?
+                as GetxResponse<T>?
         : null;
   }
 
-  Future<Request<T>> _request<T>(
+  Future<GetxRequest<T>> _request<T>(
     String? url,
     String method, {
     String? contentType,
@@ -326,7 +327,7 @@ class GetHttpClient {
     );
   }
 
-  Request<T> _delete<T>(
+  GetxRequest<T> _delete<T>(
     String url,
     String? contentType,
     Map<String, dynamic>? query,
@@ -337,7 +338,7 @@ class GetHttpClient {
     _setSimpleHeaders(headers, contentType);
     final uri = createUri(url, query);
 
-    return Request<T>(
+    return GetxRequest<T>(
       method: 'delete',
       url: uri,
       headers: headers,
@@ -346,7 +347,7 @@ class GetHttpClient {
     );
   }
 
-  Future<Response<T>> send<T>(Request<T> request) async {
+  Future<GetxResponse<T>> send<T>(GetxRequest<T> request) async {
     try {
       var response = await _performRequest<T>(() => Future.value(request));
       return response;
@@ -354,13 +355,13 @@ class GetHttpClient {
       if (!errorSafety) {
         throw GetHttpException(e.toString());
       }
-      return Future.value(Response<T>(
+      return Future.value(GetxResponse<T>(
         statusText: 'Can not connect to server. Reason: $e',
       ));
     }
   }
 
-  Future<Response<T>> patch<T>(
+  Future<GetxResponse<T>> patch<T>(
     String url, {
     dynamic body,
     String? contentType,
@@ -390,13 +391,13 @@ class GetHttpClient {
       if (!errorSafety) {
         throw GetHttpException(e.toString());
       }
-      return Future.value(Response<T>(
+      return Future.value(GetxResponse<T>(
         statusText: 'Can not connect to server. Reason: $e',
       ));
     }
   }
 
-  Future<Response<T>> post<T>(
+  Future<GetxResponse<T>> post<T>(
     String? url, {
     dynamic body,
     String? contentType,
@@ -426,13 +427,13 @@ class GetHttpClient {
       if (!errorSafety) {
         throw GetHttpException(e.toString());
       }
-      return Future.value(Response<T>(
+      return Future.value(GetxResponse<T>(
         statusText: 'Can not connect to server. Reason: $e',
       ));
     }
   }
 
-  Future<Response<T>> request<T>(
+  Future<GetxResponse<T>> request<T>(
     String url,
     String method, {
     dynamic body,
@@ -462,13 +463,13 @@ class GetHttpClient {
       if (!errorSafety) {
         throw GetHttpException(e.toString());
       }
-      return Future.value(Response<T>(
+      return Future.value(GetxResponse<T>(
         statusText: 'Can not connect to server. Reason: $e',
       ));
     }
   }
 
-  Future<Response<T>> put<T>(
+  Future<GetxResponse<T>> put<T>(
     String url, {
     dynamic body,
     String? contentType,
@@ -497,13 +498,13 @@ class GetHttpClient {
       if (!errorSafety) {
         throw GetHttpException(e.toString());
       }
-      return Future.value(Response<T>(
+      return Future.value(GetxResponse<T>(
         statusText: 'Can not connect to server. Reason: $e',
       ));
     }
   }
 
-  Future<Response<T>> get<T>(
+  Future<GetxResponse<T>> get<T>(
     String url, {
     Map<String, String>? headers,
     String? contentType,
@@ -521,13 +522,13 @@ class GetHttpClient {
       if (!errorSafety) {
         throw GetHttpException(e.toString());
       }
-      return Future.value(Response<T>(
+      return Future.value(GetxResponse<T>(
         statusText: 'Can not connect to server. Reason: $e',
       ));
     }
   }
 
-  Future<Response<T>> delete<T>(String url,
+  Future<GetxResponse<T>> delete<T>(String url,
       {Map<String, String>? headers,
       String? contentType,
       Map<String, dynamic>? query,
@@ -544,7 +545,7 @@ class GetHttpClient {
       if (!errorSafety) {
         throw GetHttpException(e.toString());
       }
-      return Future.value(Response<T>(
+      return Future.value(GetxResponse<T>(
         statusText: 'Can not connect to server. Reason: $e',
       ));
     }

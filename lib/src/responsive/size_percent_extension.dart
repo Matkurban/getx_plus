@@ -1,4 +1,4 @@
-import '../../get.dart';
+import 'package:getx_plus/get.dart';
 
 //Converts a double value to a percentage
 extension PercentSized on double {

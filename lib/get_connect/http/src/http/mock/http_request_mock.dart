@@ -1,20 +1,20 @@
-import '../../request/request.dart';
-import '../../response/response.dart';
-import '../interface/request_base.dart';
-import '../utils/body_decoder.dart';
+import 'package:getx_plus/get_connect/http/src/http/interface/request_base.dart';
+import 'package:getx_plus/get_connect/http/src/http/utils/body_decoder.dart';
+import 'package:getx_plus/get_connect/http/src/request/getx_request.dart';
+import 'package:getx_plus/get_connect/http/src/response/getx_response.dart';
 
-typedef MockClientHandler = Future<Response> Function(Request request);
+typedef MockClientHandler = Future<GetxResponse> Function(GetxRequest request);
 
 class MockClient extends IClient {
   /// The handler for than transforms request on response
   final MockClientHandler _handler;
 
-  /// Creates a [MockClient] with a handler that receives [Request]s and sends
-  /// [Response]s.
+  /// Creates a [MockClient] with a handler that receives [GetxRequest]s and sends
+  /// [GetxResponse]s.
   MockClient(this._handler);
 
   @override
-  Future<Response<T>> send<T>(Request<T> request) async {
+  Future<GetxResponse<T>> send<T>(GetxRequest<T> request) async {
     var requestBody = await request.bodyBytes.toBytes();
     var bodyBytes = requestBody.toStream();
 
@@ -31,7 +31,7 @@ class MockClient extends IClient {
       stringBody,
       mimeType,
     );
-    return Response(
+    return GetxResponse(
       headers: response.headers,
       request: request,
       statusCode: response.statusCode,

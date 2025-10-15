@@ -1,8 +1,7 @@
-// ignore: prefer_mixin
 import 'package:flutter/widgets.dart';
+import 'package:getx_plus/get_state_manager/src/rx_flutter/rx_notifier.dart';
+import 'package:getx_plus/instance_manager.dart';
 
-import '../../../instance_manager.dart';
-import '../rx_flutter/rx_notifier.dart';
 import 'list_notifier.dart';
 
 /// A base controller class that provides state management functionality.

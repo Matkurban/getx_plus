@@ -1,4 +1,4 @@
-import '../../../get_core/get_core.dart';
+import 'package:getx_plus/get_core/get_core.dart';
 
 /// Returns whether a dynamic value PROBABLY
 /// has the isEmpty getter/method by checking
@@ -525,7 +525,7 @@ class GetUtils {
     }
 
     final separatedWords =
-        value.split(RegExp(r'[!@#<>?":`~;[\]\\|=+)(*&^%-\s_]+'));
+        value.split(RegExp(r'[!@#<>?":`~;[\]\\|=+)(*&^%-s_]+'));
     var newString = '';
 
     for (final word in separatedWords) {

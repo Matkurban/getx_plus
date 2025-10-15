@@ -1,12 +1,12 @@
-import '../../request/request.dart';
-import '../../response/response.dart';
+import 'package:getx_plus/get_connect/http/src/request/getx_request.dart';
+import 'package:getx_plus/get_connect/http/src/response/getx_response.dart';
 
 /// Abstract interface of [HttpRequestImpl].
 abstract class IClient {
-  /// Sends an HTTP [Request].
-  Future<Response<T>> send<T>(Request<T> request);
+  /// Sends an HTTP [GetxRequest].
+  Future<GetxResponse<T>> send<T>(GetxRequest<T> request);
 
-  /// Closes the [Request] and cleans up any resources associated with it.
+  /// Closes the [GetxRequest] and cleans up any resources associated with it.
   void close();
 
   /// Gets and sets the timeout.

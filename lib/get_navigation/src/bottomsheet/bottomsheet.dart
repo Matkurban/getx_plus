@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../get.dart';
-import '../router_report.dart';
+import 'package:getx_plus/get_navigation/src/router_report.dart';
 
 class GetModalBottomSheetRoute<T> extends PopupRoute<T> {
   GetModalBottomSheetRoute({

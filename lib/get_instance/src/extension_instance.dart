@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:getx_plus/get_core/get_core.dart';
+import 'package:getx_plus/get_navigation/src/router_report.dart';
 
-import '../../get_core/get_core.dart';
-import '../../get_navigation/src/router_report.dart';
 import 'lifecycle.dart';
 
 class InstanceInfo {

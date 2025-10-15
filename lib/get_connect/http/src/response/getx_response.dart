@@ -1,16 +1,16 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import '../exceptions/exceptions.dart';
-import '../request/request.dart';
-import '../status/http_status.dart';
+import 'package:getx_plus/get_connect/http/src/exceptions/exceptions.dart';
+import 'package:getx_plus/get_connect/http/src/request/getx_request.dart';
+import 'package:getx_plus/get_connect/http/src/status/http_status.dart';
 
-class GraphQLResponse<T> extends Response<T> {
+class GraphQLResponse<T> extends GetxResponse<T> {
   final List<GraphQLError>? graphQLErrors;
 
   GraphQLResponse({super.body, this.graphQLErrors});
 
-  GraphQLResponse.fromResponse(Response res)
+  GraphQLResponse.fromResponse(GetxResponse res)
       : graphQLErrors = null,
         super(
             request: res.request,
@@ -22,8 +22,8 @@ class GraphQLResponse<T> extends Response<T> {
             body: res.body['data'] as T?);
 }
 
-class Response<T> {
-  const Response({
+class GetxResponse<T> {
+  const GetxResponse({
     this.request,
     this.statusCode,
     this.bodyBytes,
@@ -33,8 +33,8 @@ class Response<T> {
     this.body,
   });
 
-  Response<T> copyWith({
-    Request? request,
+  GetxResponse<T> copyWith({
+    GetxRequest? request,
     int? statusCode,
     Stream<List<int>>? bodyBytes,
     String? bodyString,
@@ -42,7 +42,7 @@ class Response<T> {
     Map<String, String>? headers,
     T? body,
   }) {
-    return Response<T>(
+    return GetxResponse<T>(
       request: request ?? this.request,
       statusCode: statusCode ?? this.statusCode,
       bodyBytes: bodyBytes ?? this.bodyBytes,
@@ -53,8 +53,8 @@ class Response<T> {
     );
   }
 
-  /// The Http [Request] linked with this [Response].
-  final Request? request;
+  /// The Http [GetxRequest] linked with this [GetxResponse].
+  final GetxRequest? request;
 
   /// The response headers.
   final Map<String, String>? headers;
@@ -65,7 +65,7 @@ class Response<T> {
   /// Human-readable context for [statusCode].
   final String? statusText;
 
-  /// [HttpStatus] from [Response]. `status.connectionError` is true
+  /// [HttpStatus] from [GetxResponse]. `status.connectionError` is true
   /// when statusCode is null. `status.isUnauthorized` is true when
   /// statusCode is equal `401`. `status.isNotFound` is true when
   /// statusCode is equal `404`. `status.isServerError` is true when
@@ -87,7 +87,7 @@ class Response<T> {
   /// The response body as a Stream of Bytes.
   final String? bodyString;
 
-  /// The decoded body of this [Response]. You can access the
+  /// The decoded body of this [GetxResponse]. You can access the
   /// body parameters as Map
   /// Ex: `body['title'];`
   final T? body;

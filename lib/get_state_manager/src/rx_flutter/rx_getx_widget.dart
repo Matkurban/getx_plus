@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-
-import '../../../get_core/get_core.dart';
-import '../../../get_instance/src/extension_instance.dart';
-import '../../../get_instance/src/lifecycle.dart';
-import '../simple/list_notifier.dart';
+import 'package:getx_plus/get_core/get_core.dart';
+import 'package:getx_plus/get_instance/src/extension_instance.dart';
+import 'package:getx_plus/get_instance/src/lifecycle.dart';
+import 'package:getx_plus/get_state_manager/src/simple/list_notifier.dart';
+// import '../simple/list_notifier.dart';
 
 typedef GetXControllerBuilder<T extends GetLifeCycleMixin> = Widget Function(
     T controller);

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import '../../../../../get_core/get_core.dart';
-import '../../request/request.dart';
+import 'package:getx_plus/get.dart';
+import 'package:getx_plus/get_connect/http/src/request/getx_request.dart';
 
-T? bodyDecoded<T>(Request<T> request, String stringBody, String? mimeType) {
+T? bodyDecoded<T>(GetxRequest<T> request, String stringBody, String? mimeType) {
   T? body;
   dynamic bodyToDecode;
 

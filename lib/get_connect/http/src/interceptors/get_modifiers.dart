@@ -1,14 +1,15 @@
 import 'dart:async';
 
-import '../request/request.dart';
-import '../response/response.dart';
+import 'package:getx_plus/get_connect/http/src/request/getx_request.dart';
+import 'package:getx_plus/get_connect/http/src/response/getx_response.dart';
 
-typedef RequestModifier<T> = FutureOr<Request<T>> Function(Request<T?> request);
+typedef RequestModifier<T> = FutureOr<GetxRequest<T>> Function(
+    GetxRequest<T?> request);
 
 typedef ResponseModifier<T> = FutureOr Function(
-    Request<T?> request, Response<T?> response);
+    GetxRequest<T?> request, GetxResponse<T?> response);
 
-typedef HandlerExecute<T> = Future<Request<T>> Function();
+typedef HandlerExecute<T> = Future<GetxRequest<T>> Function();
 
 class GetModifier<S> {
   final _requestModifiers = <RequestModifier>[];
@@ -31,23 +32,24 @@ class GetModifier<S> {
     _requestModifiers.remove(interceptor);
   }
 
-  Future<Request<T>> modifyRequest<T>(Request<T> request) async {
+  Future<GetxRequest<T>> modifyRequest<T>(GetxRequest<T> request) async {
     var newRequest = request;
     if (_requestModifiers.isNotEmpty) {
       for (var interceptor in _requestModifiers) {
-        newRequest = await interceptor(newRequest) as Request<T>;
+        newRequest = await interceptor(newRequest) as GetxRequest<T>;
       }
     }
 
     return newRequest;
   }
 
-  Future<Response<T>> modifyResponse<T>(
-      Request<T> request, Response<T> response) async {
+  Future<GetxResponse<T>> modifyResponse<T>(
+      GetxRequest<T> request, GetxResponse<T> response) async {
     var newResponse = response;
     if (_responseModifiers.isNotEmpty) {
       for (var interceptor in _responseModifiers) {
-        newResponse = await interceptor(request, newResponse) as Response<T>;
+        newResponse =
+            await interceptor(request, newResponse) as GetxResponse<T>;
       }
     }
 

@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
-import '../../../get_core/get_core.dart';
+import 'package:getx_plus/get_core/get_core.dart';
+
 import 'socket_notifier.dart';
 
 class BaseWebSocket {

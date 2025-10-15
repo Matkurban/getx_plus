@@ -23,7 +23,8 @@ void main() {
     expect(devicePixelRatio, context.devicePixelRatio);
     var height = mediaQuerySize.height;
     expect(height, context.height);
-    final heightTransformer = (mediaQuerySize.height - ((mediaQuerySize.height / 100) * 0)) / 1;
+    final heightTransformer =
+        (mediaQuerySize.height - ((mediaQuerySize.height / 100) * 0)) / 1;
     expect(heightTransformer, context.heightTransformer());
     var iconColor = theme.iconTheme.color;
     expect(iconColor, context.iconColor);
@@ -54,7 +55,8 @@ void main() {
     expect(mediaQueryViewInsets, context.mediaQueryViewInsets);
     var mediaQueryViewPadding = mediaQuery.viewPadding;
     expect(mediaQueryViewPadding, context.mediaQueryViewPadding);
-    var widthTransformer = (mediaQuerySize.width - ((mediaQuerySize.width / 100) * 0)) / 1;
+    var widthTransformer =
+        (mediaQuerySize.width - ((mediaQuerySize.width / 100) * 0)) / 1;
     expect(widthTransformer, context.widthTransformer());
     var ratio = heightTransformer / widthTransformer;
     expect(ratio, context.ratio());

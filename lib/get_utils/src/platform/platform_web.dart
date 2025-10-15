@@ -1,11 +1,9 @@
+import 'package:getx_plus/get_utils/get_utils.dart';
 import 'package:web/web.dart' as html;
-
-import '../../get_utils.dart';
 
 html.Navigator _navigator = html.window.navigator;
 
-// ignore: avoid_classes_with_only_static_members
-class GeneralPlatform {
+sealed class GeneralPlatform {
   static bool get isWeb => true;
 
   static bool get isMacOS =>

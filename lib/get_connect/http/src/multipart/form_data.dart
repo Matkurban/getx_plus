@@ -2,8 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
-import '../request/request.dart';
-import '../utils/utils.dart';
+import 'package:getx_plus/get_connect/http/src/request/getx_request.dart';
+import 'package:getx_plus/get_connect/http/src/utils/utils.dart';
+
 import 'multipart_file.dart';
 
 class FormData {

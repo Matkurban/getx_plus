@@ -1,4 +1,4 @@
-import './socket_notifier.dart';
+import 'package:getx_plus/get_connect/sockets/src/socket_notifier.dart';
 
 class BaseWebSocket {
   String url;

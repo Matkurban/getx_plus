@@ -16,5 +16,3 @@ List<int> fileToBytes(dynamic data) {
         'File is not "File" or "String" or "List<int>"');
   }
 }
-
-void writeOnFile(List<int> bytes) {}

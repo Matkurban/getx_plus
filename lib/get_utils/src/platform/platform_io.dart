@@ -1,7 +1,6 @@
 import 'dart:io';
 
-// ignore: avoid_classes_with_only_static_members
-class GeneralPlatform {
+sealed class GeneralPlatform {
   static bool get isWeb => false;
 
   static bool get isMacOS => Platform.isMacOS;

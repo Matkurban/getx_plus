@@ -2,12 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:getx_plus/get_rx/src/rx_types/rx_types.dart';
+import 'package:getx_plus/get_state_manager/get_state_manager.dart';
+import 'package:getx_plus/get_state_manager/src/simple/list_notifier.dart';
+import 'package:getx_plus/instance_manager.dart';
 import 'package:getx_plus/utils.dart';
-
-import '../../../get_rx/src/rx_types/rx_types.dart';
-import '../../../instance_manager.dart';
-import '../../get_state_manager.dart';
-import '../simple/list_notifier.dart';
 
 extension _Empty on Object {
   bool _isEmpty() {
@@ -101,7 +100,8 @@ mixin StateMixin<T> on ListNotifier {
 
       refresh();
     }, onError: (err) {
-      status = GetStatus.error(err is Exception ? err : Exception(errorMessage ?? err.toString()));
+      status = GetStatus.error(
+          err is Exception ? err : Exception(errorMessage ?? err.toString()));
       refresh();
     });
   }
@@ -118,7 +118,8 @@ class GetListenable<T> extends ListNotifierSingle implements RxInterface<T> {
 
   StreamController<T> get subject {
     if (_controller == null) {
-      _controller = StreamController<T>.broadcast(onCancel: addListener(_streamListener));
+      _controller =
+          StreamController<T>.broadcast(onCancel: addListener(_streamListener));
       _controller?.add(_value);
 
       ///TODO: report to controller dispose
@@ -185,7 +186,9 @@ class GetListenable<T> extends ListNotifierSingle implements RxInterface<T> {
   String toString() => value.toString();
 }
 
-class Value<T> extends ListNotifier with StateMixin<T> implements ValueListenable<T?> {
+class Value<T> extends ListNotifier
+    with StateMixin<T>
+    implements ValueListenable<T?> {
   Value(T val) {
     _value = val;
     _fillInitialStatus();
@@ -244,7 +247,8 @@ extension StateExt<T> on StateMixin<T> {
             ? onError(status.errorMessage)
             : Center(child: Text('A error occurred: ${status.errorMessage}'));
       } else if (status.isEmpty) {
-        return onEmpty ?? const SizedBox.shrink(); // Also can be widget(null); but is risky
+        return onEmpty ??
+            const SizedBox.shrink(); // Also can be widget(null); but is risky
       } else if (status.isSuccess) {
         return widget(value);
       } else if (status.isCustom) {

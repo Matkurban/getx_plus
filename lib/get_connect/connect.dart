@@ -2,21 +2,21 @@ import '../get_instance/src/lifecycle.dart';
 import 'http/src/certificates/certificates.dart';
 import 'http/src/exceptions/exceptions.dart';
 import 'http/src/http.dart';
-import 'http/src/response/response.dart';
+import 'http/src/response/getx_response.dart';
 import 'sockets/sockets.dart';
 
 export 'http/src/certificates/certificates.dart';
 export 'http/src/http.dart';
 export 'http/src/multipart/form_data.dart';
 export 'http/src/multipart/multipart_file.dart';
-export 'http/src/response/response.dart';
+export 'http/src/response/getx_response.dart';
 export 'sockets/sockets.dart';
 
 abstract class GetConnectInterface with GetLifeCycleMixin {
   List<GetSocket>? sockets;
   GetHttpClient get httpClient;
 
-  Future<Response<T>> get<T>(
+  Future<GetxResponse<T>> get<T>(
     String url, {
     Map<String, String>? headers,
     String? contentType,
@@ -24,7 +24,7 @@ abstract class GetConnectInterface with GetLifeCycleMixin {
     Decoder<T>? decoder,
   });
 
-  Future<Response<T>> request<T>(
+  Future<GetxResponse<T>> request<T>(
     String url,
     String method, {
     dynamic body,
@@ -34,7 +34,7 @@ abstract class GetConnectInterface with GetLifeCycleMixin {
     Decoder<T>? decoder,
   });
 
-  Future<Response<T>> post<T>(
+  Future<GetxResponse<T>> post<T>(
     String url,
     dynamic body, {
     String? contentType,
@@ -43,7 +43,7 @@ abstract class GetConnectInterface with GetLifeCycleMixin {
     Decoder<T>? decoder,
   });
 
-  Future<Response<T>> put<T>(
+  Future<GetxResponse<T>> put<T>(
     String url,
     dynamic body, {
     String? contentType,
@@ -52,7 +52,7 @@ abstract class GetConnectInterface with GetLifeCycleMixin {
     Decoder<T>? decoder,
   });
 
-  Future<Response<T>> delete<T>(
+  Future<GetxResponse<T>> delete<T>(
     String url, {
     Map<String, String>? headers,
     String? contentType,
@@ -60,7 +60,7 @@ abstract class GetConnectInterface with GetLifeCycleMixin {
     Decoder<T>? decoder,
   });
 
-  Future<Response<T>> patch<T>(
+  Future<GetxResponse<T>> patch<T>(
     String url,
     dynamic body, {
     String? contentType,
@@ -136,7 +136,7 @@ class GetConnect extends GetConnectInterface {
       findProxy: findProxy);
 
   @override
-  Future<Response<T>> get<T>(
+  Future<GetxResponse<T>> get<T>(
     String url, {
     Map<String, String>? headers,
     String? contentType,
@@ -154,7 +154,7 @@ class GetConnect extends GetConnectInterface {
   }
 
   @override
-  Future<Response<T>> post<T>(
+  Future<GetxResponse<T>> post<T>(
     String? url,
     dynamic body, {
     String? contentType,
@@ -176,7 +176,7 @@ class GetConnect extends GetConnectInterface {
   }
 
   @override
-  Future<Response<T>> put<T>(
+  Future<GetxResponse<T>> put<T>(
     String url,
     dynamic body, {
     String? contentType,
@@ -198,7 +198,7 @@ class GetConnect extends GetConnectInterface {
   }
 
   @override
-  Future<Response<T>> patch<T>(
+  Future<GetxResponse<T>> patch<T>(
     String url,
     dynamic body, {
     String? contentType,
@@ -220,7 +220,7 @@ class GetConnect extends GetConnectInterface {
   }
 
   @override
-  Future<Response<T>> request<T>(
+  Future<GetxResponse<T>> request<T>(
     String url,
     String method, {
     dynamic body,
@@ -244,7 +244,7 @@ class GetConnect extends GetConnectInterface {
   }
 
   @override
-  Future<Response<T>> delete<T>(
+  Future<GetxResponse<T>> delete<T>(
     String url, {
     Map<String, String>? headers,
     String? contentType,

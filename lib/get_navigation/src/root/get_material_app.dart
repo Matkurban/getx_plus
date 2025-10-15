@@ -72,13 +72,15 @@ class GetMaterialApp extends StatelessWidget {
     this.navigatorKey,
     this.scaffoldMessengerKey,
     this.home,
-    Map<String, Widget Function(BuildContext)> this.routes = const <String, WidgetBuilder>{},
+    Map<String, Widget Function(BuildContext)> this.routes =
+        const <String, WidgetBuilder>{},
     this.initialRoute,
     this.onGenerateRoute,
     this.onGenerateInitialRoutes,
     this.onUnknownRoute,
     this.useInheritedMediaQuery = false,
-    List<NavigatorObserver> this.navigatorObservers = const <NavigatorObserver>[],
+    List<NavigatorObserver> this.navigatorObservers =
+        const <NavigatorObserver>[],
     this.builder,
     this.textDirection,
     this.title = '',
@@ -260,7 +262,9 @@ class GetMaterialApp extends StatelessWidget {
           onGenerateTitle: onGenerateTitle,
           color: color,
           theme: controller.config.theme ?? ThemeData.fallback(),
-          darkTheme: controller.config.darkTheme ?? controller.config.theme ?? ThemeData.fallback(),
+          darkTheme: controller.config.darkTheme ??
+              controller.config.theme ??
+              ThemeData.fallback(),
           themeMode: controller.config.themeMode,
           locale: Get.locale ?? locale,
           scaffoldMessengerKey: controller.config.scaffoldMessengerKey,

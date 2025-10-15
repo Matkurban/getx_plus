@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:js_interop';
 
+import 'package:getx_plus/get_connect/http/src/certificates/certificates.dart';
+import 'package:getx_plus/get_connect/http/src/exceptions/exceptions.dart';
+import 'package:getx_plus/get_connect/http/src/http/interface/request_base.dart';
+import 'package:getx_plus/get_connect/http/src/http/utils/body_decoder.dart';
+import 'package:getx_plus/get_connect/http/src/request/getx_request.dart';
+import 'package:getx_plus/get_connect/http/src/response/getx_response.dart';
 import 'package:web/web.dart' show XHRGetters, XMLHttpRequest;
-
-import '../../certificates/certificates.dart';
-import '../../exceptions/exceptions.dart';
-import '../../request/request.dart';
-import '../../response/response.dart';
-import '../interface/request_base.dart';
-import '../utils/body_decoder.dart';
 
 class HttpRequestImpl implements IClient {
   HttpRequestImpl({
@@ -22,7 +21,7 @@ class HttpRequestImpl implements IClient {
   final bool withCredentials;
 
   @override
-  Future<Response<T>> send<T>(Request<T> request) async {
+  Future<GetxResponse<T>> send<T>(GetxRequest<T> request) async {
     if (_isClosed) {
       throw GetHttpException(
           'HTTP request failed. Client is already closed.', request.url);
@@ -43,7 +42,7 @@ class HttpRequestImpl implements IClient {
 
     request.headers.forEach((key, value) => xhr.setRequestHeader(key, value));
 
-    var completer = Completer<Response<T>>();
+    var completer = Completer<GetxResponse<T>>();
 
     unawaited(xhr.onLoad.first.then((_) async {
       final bodyBytes =
@@ -61,7 +60,7 @@ class HttpRequestImpl implements IClient {
 
       final body = bodyDecoded<T>(request, stringBody, contentType);
 
-      final response = Response<T>(
+      final response = GetxResponse<T>(
         bodyBytes: bodyBytes,
         statusCode: xhr.status,
         request: request,

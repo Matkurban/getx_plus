@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-
-import '../../../get.dart';
+import 'package:getx_plus/get.dart';
 
 mixin GetResponsiveMixin on Widget {
   ResponsiveScreen get screen;

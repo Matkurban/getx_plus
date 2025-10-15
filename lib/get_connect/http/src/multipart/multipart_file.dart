@@ -1,7 +1,7 @@
-import '../http/stub/file_decoder_stub.dart'
-    if (dart.library.js_interop) '../http/html/file_decoder_html.dart'
-    if (dart.library.io) '../http/io/file_decoder_io.dart';
-import '../request/request.dart';
+import 'package:getx_plus/get_connect/http/src/http/stub/file_decoder_stub.dart'
+    if (dart.library.js_interop) 'package:getx_plus/get_connect/http/src/http/html/file_decoder_html.dart'
+    if (dart.library.io) 'package:getx_plus/get_connect/http/src/http/io/file_decoder_io.dart';
+import 'package:getx_plus/get_connect/http/src/request/getx_request.dart';
 
 class MultipartFile {
   MultipartFile(

@@ -67,22 +67,28 @@ void main() {
 
     // Verify that the value changes over time
     await tester.pump(const Duration(milliseconds: 100));
-    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, closeTo(0.2, 0.01));
+    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity,
+        closeTo(0.2, 0.01));
 
     await tester.pump(const Duration(milliseconds: 100));
-    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, closeTo(0.4, 0.01));
+    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity,
+        closeTo(0.4, 0.01));
 
     await tester.pump(const Duration(milliseconds: 100));
-    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, closeTo(0.6, 0.01));
+    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity,
+        closeTo(0.6, 0.01));
 
     await tester.pump(const Duration(milliseconds: 100));
-    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, closeTo(0.8, 0.01));
+    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity,
+        closeTo(0.8, 0.01));
 
     await tester.pump(const Duration(milliseconds: 100));
-    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, closeTo(1.0, 0.01));
+    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity,
+        closeTo(1.0, 0.01));
   });
 
-  testWidgets('onComplete callback is called when animation finishes', (WidgetTester tester) async {
+  testWidgets('onComplete callback is called when animation finishes',
+      (WidgetTester tester) async {
     AnimationController? controller;
     var onCompleteCalled = false;
 
@@ -114,7 +120,8 @@ void main() {
     expect(onCompleteCalled, isTrue);
   });
 
-  testWidgets('onStart callback is called when animation starts', (WidgetTester tester) async {
+  testWidgets('onStart callback is called when animation starts',
+      (WidgetTester tester) async {
     var onStartCalled = false;
 
     await tester.pumpWidget(
@@ -196,19 +203,24 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
 
     // The value should be updated
-    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, closeTo(0.2, 0.01));
+    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity,
+        closeTo(0.2, 0.01));
 
     await tester.pump(const Duration(milliseconds: 100));
-    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, closeTo(0.4, 0.01));
+    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity,
+        closeTo(0.4, 0.01));
 
     await tester.pump(const Duration(milliseconds: 100));
-    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, closeTo(0.6, 0.01));
+    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity,
+        closeTo(0.6, 0.01));
 
     await tester.pump(const Duration(milliseconds: 100));
-    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, closeTo(0.8, 0.01));
+    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity,
+        closeTo(0.8, 0.01));
 
     await tester.pump(const Duration(milliseconds: 100));
-    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity, closeTo(1.0, 0.01));
+    expect(tester.widget<Opacity>(find.byType(Opacity)).opacity,
+        closeTo(1.0, 0.01));
   });
 
   testWidgets(
@@ -229,14 +241,20 @@ void main() {
     );
 
     // The variable starts as false
-    expect(tester.state<GetAnimatedBuilderState>(find.byType(FadeOutAnimation)).willResetOnDispose,
+    expect(
+        tester
+            .state<GetAnimatedBuilderState>(find.byType(FadeOutAnimation))
+            .willResetOnDispose,
         false);
 
     // Jump to middle of next animation
     await tester.pump(const Duration(milliseconds: 500));
 
     // The value should be false
-    expect(tester.state<GetAnimatedBuilderState>(find.byType(FadeOutAnimation)).willResetOnDispose,
+    expect(
+        tester
+            .state<GetAnimatedBuilderState>(find.byType(FadeOutAnimation))
+            .willResetOnDispose,
         false);
 
     await tester.pumpAndSettle();
@@ -260,14 +278,20 @@ void main() {
     );
 
     // The variable starts as true
-    expect(tester.state<GetAnimatedBuilderState>(find.byType(FadeOutAnimation)).willResetOnDispose,
+    expect(
+        tester
+            .state<GetAnimatedBuilderState>(find.byType(FadeOutAnimation))
+            .willResetOnDispose,
         true);
 
     // Jump to middle of next animation
     await tester.pump(const Duration(milliseconds: 500));
 
     // The value should be true
-    expect(tester.state<GetAnimatedBuilderState>(find.byType(FadeOutAnimation)).willResetOnDispose,
+    expect(
+        tester
+            .state<GetAnimatedBuilderState>(find.byType(FadeOutAnimation))
+            .willResetOnDispose,
         true);
 
     await tester.pumpAndSettle();

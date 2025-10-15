@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import '../../get.dart';
+import 'package:getx_plus/get.dart';
 
 class RouterReportManager<T> {
   /// Holds a reference to `Get.reference` when the Instance was
