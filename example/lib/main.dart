@@ -22,15 +22,21 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Home Page')),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Get.to(() => const BottomSheetTest());
-            },
-            child: const Text('Go to BottomSheetTest Page'),
-          ),
-        ],
+      body: SizedBox(
+        width: Get.width,
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Get.to(() => const BottomSheetTest());
+              },
+              child: const Text('Go to BottomSheetTest Page'),
+            ),
+          ],
+        ),
       ),
     );
   }
