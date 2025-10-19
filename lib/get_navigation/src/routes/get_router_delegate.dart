@@ -3,12 +3,13 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:getx_plus/get.dart';
+import 'package:go_router/go_router.dart';
+
+import 'go_router_support.dart';
+import 'web_history_helper.dart';
 
 class GetDelegate extends RouterDelegate<RouteDecoder>
-    with
-        ChangeNotifier,
-        PopNavigatorRouterDelegateMixin<RouteDecoder>,
-        IGetNavigation {
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<RouteDecoder>, IGetNavigation {
   factory GetDelegate.createDelegate({
     GetPage<dynamic>? notFoundRoute,
     List<GetPage> pages = const [],
@@ -31,41 +32,117 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
   }
 
   final List<RouteDecoder> _activePages = <RouteDecoder>[];
+  final List<GetPage<dynamic>> _rootRoutes = <GetPage<dynamic>>[];
   final PopMode backButtonPopMode;
   final PreventDuplicateHandlingMode preventDuplicateHandlingMode;
 
   final GetPage notFoundRoute;
 
+  GoRouter? _goRouter;
+  bool _routerDirty = true;
+  String? _initialLocation;
+  bool _isUpdatingRouter = false;
+
   final List<NavigatorObserver>? navigatorObservers;
   final TransitionDelegate<dynamic>? transitionDelegate;
 
-  final Iterable<GetPage> Function(RouteDecoder currentNavStack)?
-      pickPagesForRootNavigator;
+  final Iterable<GetPage> Function(RouteDecoder currentNavStack)? pickPagesForRootNavigator;
 
   List<RouteDecoder> get activePages => _activePages;
 
   final _routeTree = ParseRouteTree(routes: []);
 
-  List<GetPage> get registeredRoutes => _routeTree.routes;
+  List<GetPage<dynamic>> get registeredRoutes => List.unmodifiable(_rootRoutes);
 
   void addPages(List<GetPage> getPages) {
+    for (final page in getPages) {
+      if (!_rootRoutes.contains(page)) {
+        _rootRoutes.add(page);
+      }
+    }
     _routeTree.addRoutes(getPages);
+    _markRouterDirty();
   }
 
   void clearRouteTree() {
+    _rootRoutes.clear();
     _routeTree.routes.clear();
+    _markRouterDirty();
   }
 
   void addPage(GetPage getPage) {
+    if (!_rootRoutes.contains(getPage)) {
+      _rootRoutes.add(getPage);
+    }
     _routeTree.addRoute(getPage);
+    _markRouterDirty();
   }
 
   void removePage(GetPage getPage) {
+    _rootRoutes.remove(getPage);
     _routeTree.removeRoute(getPage);
+    _markRouterDirty();
+  }
+
+  void _markRouterDirty() {
+    _routerDirty = true;
+    if (_goRouter != null) {
+      notifyListeners();
+    }
   }
 
   RouteDecoder matchRoute(String name, {PageSettings? arguments}) {
     return _routeTree.matchRoute(name, arguments: arguments);
+  }
+
+  GoRouter get goRouter => _ensureRouter();
+
+  GoRouter _ensureRouter() {
+    if (_goRouter == null || _routerDirty) {
+      final previous = _goRouter;
+      if (previous != null) {
+        previous.routerDelegate.removeListener(_handleRouterChanged);
+        previous.dispose();
+      }
+      _goRouter = _buildRouter();
+      _routerDirty = false;
+    }
+    return _goRouter!;
+  }
+
+  GoRouter _buildRouter() {
+    final routeBases =
+        _rootRoutes.map((page) => GoRouteAdapter(page).toRoute()).toList(growable: false);
+
+    if (routeBases.isEmpty) {
+      routeBases.add(
+        GoRoute(
+          path: '/',
+          pageBuilder: (context, state) => GoRouteAdapter(notFoundRoute).buildPage(state),
+        ),
+      );
+    }
+
+    final observers = <NavigatorObserver>[HeroController()];
+    if (navigatorObservers != null) {
+      observers.addAll(navigatorObservers!);
+    }
+
+    final initialLocation =
+        _initialLocation ?? (_rootRoutes.isNotEmpty ? _rootRoutes.first.name : notFoundRoute.name);
+
+    final router = GoRouter(
+      navigatorKey: navigatorKey,
+      initialLocation: initialLocation,
+      routes: routeBases,
+      observers: observers,
+      errorPageBuilder: (context, state) => GoRouteAdapter.buildNotFoundPage(state),
+      redirect: (context, state) => _handleRedirect(state),
+    );
+
+    router.routerDelegate.addListener(_handleRouterChanged);
+
+    return router;
   }
 
   // GlobalKey<NavigatorState> get navigatorKey => Get.key;
@@ -80,8 +157,7 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
     this.navigatorObservers,
     this.transitionDelegate,
     this.backButtonPopMode = PopMode.history,
-    this.preventDuplicateHandlingMode =
-        PreventDuplicateHandlingMode.reorderRoutes,
+    this.preventDuplicateHandlingMode = PreventDuplicateHandlingMode.reorderRoutes,
     this.pickPagesForRootNavigator,
     this.restorationScopeId,
     bool showHashOnUrl = false,
@@ -97,7 +173,19 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
     if (!showHashOnUrl && GetPlatform.isWeb) setUrlStrategy();
     addPages(pages);
     addPage(notFoundRoute);
+    _initialLocation = pages.isNotEmpty ? pages.first.name : notFoundRoute.name;
+    _ensureRouter();
     Get.log('GetDelegate is created !');
+  }
+
+  @override
+  void dispose() {
+    final router = _goRouter;
+    if (router != null) {
+      router.routerDelegate.removeListener(_handleRouterChanged);
+      router.dispose();
+    }
+    super.dispose();
   }
 
   Future<RouteDecoder?> runMiddleware(RouteDecoder config) async {
@@ -139,6 +227,147 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
     _activePages.add(res);
   }
 
+  PageSettings _resolvePageSettings(
+    RouteDecoder decoder,
+    PageSettings fallback,
+  ) {
+    final existing = decoder.pageSettings;
+    if (existing != null) {
+      return existing;
+    }
+    final route = decoder.route;
+    if (route != null) {
+      final args = route.arguments;
+      if (args is PageSettings) {
+        return args;
+      }
+      final uri = Uri.tryParse(route.name) ?? fallback.uri;
+      return PageSettings(uri, args);
+    }
+    return fallback;
+  }
+
+  void _updateRouterLocation({RouteDecoder? target, bool replace = false}) {
+    final router = _goRouter;
+    if (router == null) {
+      return;
+    }
+    final decoder = target ?? (_activePages.isNotEmpty ? _activePages.last : null);
+    if (decoder == null) {
+      final fallback = _buildPageSettings(notFoundRoute.name);
+      _navigate(router, fallback, replace: replace);
+      return;
+    }
+
+    final fallbackSettings =
+        decoder.pageSettings ?? _buildPageSettings(decoder.route?.name ?? notFoundRoute.name);
+    final settings = _resolvePageSettings(decoder, fallbackSettings);
+
+    _navigate(router, settings, replace: replace);
+  }
+
+  String? _routerLocation(GoRouter router) {
+    final information = router.routeInformationProvider.value;
+    final uri = information.uri;
+    final uriString = uri.toString();
+    if (uriString.isNotEmpty) {
+      return uriString;
+    }
+    if (uri.path.isNotEmpty || uri.hasQuery || uri.fragment.isNotEmpty) {
+      return uriString;
+    }
+    return _initialLocation ?? notFoundRoute.name;
+  }
+
+  String? _currentLocationName() {
+    if (_activePages.isNotEmpty) {
+      final top = _activePages.last;
+      final fallback =
+          top.pageSettings ?? _buildPageSettings(top.route?.name ?? notFoundRoute.name);
+      final settings = _resolvePageSettings(top, fallback);
+      return settings.name;
+    }
+    return _initialLocation ?? notFoundRoute.name;
+  }
+
+  String? _handleRedirect(GoRouterState state) {
+    final desired = _currentLocationName();
+    if (desired == null) {
+      return null;
+    }
+    final requested = state.uri.toString();
+    if (requested == desired) {
+      return null;
+    }
+    return desired;
+  }
+
+  void _handleRouterChanged() {
+    if (_isUpdatingRouter) {
+      return;
+    }
+    final router = _goRouter;
+    if (router == null) {
+      return;
+    }
+    final desired = _currentLocationName();
+    if (desired == null) {
+      return;
+    }
+    final current = _routerLocation(router);
+    if (current == desired) {
+      return;
+    }
+
+    PageSettings settings;
+    if (_activePages.isNotEmpty) {
+      final top = _activePages.last;
+      final fallback =
+          top.pageSettings ?? _buildPageSettings(top.route?.name ?? notFoundRoute.name);
+      settings = _resolvePageSettings(top, fallback);
+    } else {
+      settings = _buildPageSettings(desired);
+    }
+
+    _isUpdatingRouter = true;
+    try {
+      router.replace(desired, extra: settings);
+      syncBrowserHistory(
+        desired,
+        replace: true,
+        blockBack: _activePages.length <= 1,
+      );
+    } finally {
+      _isUpdatingRouter = false;
+    }
+  }
+
+  void _navigate(
+    GoRouter router,
+    PageSettings settings, {
+    required bool replace,
+  }) {
+    final current = _routerLocation(router);
+    final shouldNavigate = current != settings.name;
+    if (shouldNavigate) {
+      _isUpdatingRouter = true;
+      try {
+        if (replace) {
+          router.replace(settings.name, extra: settings);
+        } else {
+          router.go(settings.name, extra: settings);
+        }
+      } finally {
+        _isUpdatingRouter = false;
+      }
+    }
+    syncBrowserHistory(
+      settings.name,
+      replace: replace || !shouldNavigate,
+      blockBack: _activePages.length <= 1,
+    );
+  }
+
   // Future<T?> _unsafeHistoryRemove<T>(RouteDecoder config, T result) async {
   //   var index = _activePages.indexOf(config);
   //   if (index >= 0) return _unsafeHistoryRemoveAt(index, result);
@@ -157,6 +386,8 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
     final completer = _activePages.removeAt(index).route?.completer;
     if (completer?.isCompleted == false) completer!.complete(result);
 
+    _updateRouterLocation(replace: true);
+
     return completer?.future as T?;
   }
 
@@ -174,8 +405,8 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
 
   Future<void> _pushHistory(RouteDecoder config) async {
     if (config.route!.preventDuplicates) {
-      final originalEntryIndex = _activePages.indexWhere(
-          (element) => element.pageSettings?.name == config.pageSettings?.name);
+      final originalEntryIndex = _activePages
+          .indexWhere((element) => element.pageSettings?.name == config.pageSettings?.name);
       if (originalEntryIndex >= 0) {
         switch (preventDuplicateHandlingMode) {
           case PreventDuplicateHandlingMode.popUntilOriginalRoute:
@@ -215,9 +446,8 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
     if (currentBranch != null && currentBranch.length > 1) {
       //remove last part only
       final remaining = currentBranch.take(currentBranch.length - 1);
-      final prevHistoryEntry = _activePages.length > 1
-          ? _activePages[_activePages.length - 2]
-          : null;
+      final prevHistoryEntry =
+          _activePages.length > 1 ? _activePages[_activePages.length - 2] : null;
 
       //check if current route is the same as the previous route
       if (prevHistoryEntry != null) {
@@ -290,20 +520,20 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
   ///
   /// visual pages must have [GetPage.participatesInRootNavigator] set to true
   Iterable<GetPage> getVisualPages(RouteDecoder? currentHistory) {
-    final res = currentHistory!.currentTreeBranch
-        .where((r) => r.participatesInRootNavigator != null);
+    final res =
+        currentHistory!.currentTreeBranch.where((r) => r.participatesInRootNavigator != null);
     if (res.isEmpty) {
       //default behavior, all routes participate in root navigator
       return _activePages.map((e) => e.route!);
     } else {
       //user specified at least one participatesInRootNavigator
-      return res
-          .where((element) => element.participatesInRootNavigator == true);
+      return res.where((element) => element.participatesInRootNavigator == true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    _ensureRouter();
     final currentHistory = currentConfiguration;
     final pages = currentHistory == null
         ? <GetPage>[]
@@ -319,8 +549,7 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
       onPopPage: _onPopVisualRoute,
       pages: pages,
       observers: navigatorObservers,
-      transitionDelegate:
-          transitionDelegate ?? const DefaultTransitionDelegate<dynamic>(),
+      transitionDelegate: transitionDelegate ?? const DefaultTransitionDelegate<dynamic>(),
     );
   }
 
@@ -336,8 +565,12 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
 
   @protected
   void _popWithResult<T>([T? result]) {
+    if (_activePages.isEmpty) {
+      return;
+    }
     final completer = _activePages.removeLast().route?.completer;
     if (completer?.isCompleted == false) completer!.complete(result);
+    _updateRouterLocation(replace: true);
   }
 
   @override
@@ -502,7 +735,7 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
     if (route == null) return null;
 
     while (_activePages.length > 1) {
-      _activePages.removeLast();
+      _popWithResult();
     }
 
     return _replaceNamed(route);
@@ -523,7 +756,7 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
     final newPredicate = predicate ?? (route) => false;
 
     while (_activePages.length > 1 && !newPredicate(_activePages.last.route!)) {
-      _activePages.removeLast();
+      _popWithResult();
     }
 
     return _push(route);
@@ -596,8 +829,7 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
   }
 
   @override
-  Future<R?> backAndtoNamed<T, R>(String page,
-      {T? result, Object? arguments}) async {
+  Future<R?> backAndtoNamed<T, R>(String page, {T? result, Object? arguments}) async {
     final args = _buildPageSettings(page, arguments);
     final route = _getRouteDecoder<R>(args);
     if (route == null) return null;
@@ -648,6 +880,7 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
     _activePages[index] = activePage!;
 
     notifyListeners();
+    _updateRouterLocation(target: activePage, replace: true);
     final result = await activePage.route?.completer?.future as Future<T?>?;
     _routeTree.removeRoute(page);
 
@@ -660,6 +893,7 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
     _activePages[index] = activePage;
 
     notifyListeners();
+    _updateRouterLocation(target: activePage, replace: true);
     final result = await activePage.route?.completer?.future as Future<T?>?;
     return result;
   }
@@ -703,16 +937,18 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
 
   @protected
   RouteDecoder _configureRouterDecoder<T>(
-      RouteDecoder decoder, PageSettings arguments) {
-    final parameters =
-        arguments.params.isEmpty ? arguments.query : arguments.params;
+    RouteDecoder decoder,
+    PageSettings arguments, {
+    bool attachCompleter = true,
+  }) {
+    final parameters = arguments.params.isEmpty ? arguments.query : arguments.params;
     arguments.params.addAll(arguments.query);
     if (decoder.parameters.isEmpty) {
       decoder.parameters.addAll(parameters);
     }
 
     decoder.route = decoder.route?.copyWith(
-      completer: _activePages.isEmpty ? null : Completer<T?>(),
+      completer: attachCompleter && _activePages.isNotEmpty ? Completer<T?>() : null,
       arguments: arguments,
       parameters: parameters,
       key: ValueKey(arguments.name),
@@ -728,11 +964,10 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
     // if (res == null) res = decoder;
 
     final preventDuplicateHandlingMode =
-        res.route?.preventDuplicateHandlingMode ??
-            PreventDuplicateHandlingMode.reorderRoutes;
+        res.route?.preventDuplicateHandlingMode ?? PreventDuplicateHandlingMode.reorderRoutes;
 
-    final onStackPage = _activePages
-        .firstWhereOrNull((element) => element.route?.key == res.route?.key);
+    final onStackPage =
+        _activePages.firstWhereOrNull((element) => element.route?.key == res.route?.key);
 
     /// There are no duplicate routes in the stack
     if (onStackPage == null) {
@@ -759,8 +994,32 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
     if (rebuildStack) {
       notifyListeners();
     }
+    final router = goRouter;
+    final pageSettings = res.pageSettings ??
+        decoder.pageSettings ??
+        _buildPageSettings(res.route?.name ?? decoder.pageSettings?.name ?? '/');
+    final location = pageSettings.name;
 
-    return decoder.route?.completer?.future as Future<T?>?;
+    final future = router.push<T>(location, extra: pageSettings);
+    syncBrowserHistory(
+      location,
+      replace: true,
+      blockBack: _activePages.length <= 1,
+    );
+    final completer = res.route?.completer;
+    if (completer != null && !completer.isCompleted) {
+      future.then((value) {
+        if (!completer.isCompleted) {
+          completer.complete(value);
+        }
+      }, onError: (error, stackTrace) {
+        if (!completer.isCompleted) {
+          completer.completeError(error, stackTrace);
+        }
+      });
+      return completer.future as Future<T?>?;
+    }
+    return future;
   }
 
   @override
@@ -808,6 +1067,10 @@ class GetDelegate extends RouterDelegate<RouteDecoder>
       await _pop(popMode ?? backButtonPopMode, result);
       notifyListeners();
       return true;
+    }
+    if (GetPlatform.isWeb && _activePages.isNotEmpty) {
+      _updateRouterLocation(target: _activePages.last, replace: true);
+      return SynchronousFuture(true);
     }
 
     return super.popRoute();

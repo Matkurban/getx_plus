@@ -1,3 +1,6 @@
+## 4.8.0
+- fix: Replace routing management with go_router
+
 ## 4.7.7
 - fix: Always import 'package:getx_plus/get.dart'  using GetX  package.
 
