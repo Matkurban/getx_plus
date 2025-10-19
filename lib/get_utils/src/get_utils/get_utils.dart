@@ -201,12 +201,12 @@ class GetUtils {
   }
 
   /// Checks if string is a valid username.
-  static bool isUsername(String s) =>
-      hasMatch(s, r'^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]$');
+  static bool isUsername(String s) => hasMatch(s, r'^[a-zA-Z0-9][a-zA-Z0-9_.]+[a-zA-Z0-9]$');
 
   /// Checks if string is URL.
+  /// Checks if string is URL.
   static bool isURL(String s) => hasMatch(s,
-      r"^((((H|h)(T|t)|(F|f))(T|t)(P|p)((S|s)?))\://)?(www.|[a-zA-Z0-9].)[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,7}(\:[0-9]{1,5})*(/($|[a-zA-Z0-9\.\,\;\?\'\\\+&amp;%\$#\=~_\-]+))*$");
+      r'^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$');
 
   /// Checks if string is email.
   static bool isEmail(String s) => hasMatch(s,
@@ -234,15 +234,14 @@ class GetUtils {
       hasMatch(s, r'([A-Fa-f0-9]{2}\:){31}[A-Fa-f0-9]{2}|[A-Fa-f0-9]{64}');
 
   /// Checks if string is SSN (Social Security Number).
-  static bool isSSN(String s) => hasMatch(s,
-      r'^(?!0{3}|6{3}|9[0-9]{2})[0-9]{3}-?(?!0{2})[0-9]{2}-?(?!0{4})[0-9]{4}$');
+  static bool isSSN(String s) =>
+      hasMatch(s, r'^(?!0{3}|6{3}|9[0-9]{2})[0-9]{3}-?(?!0{2})[0-9]{2}-?(?!0{4})[0-9]{4}$');
 
   /// Checks if string is binary.
   static bool isBinary(String s) => hasMatch(s, r'^[0-1]+$');
 
   /// Checks if string is IPv4.
-  static bool isIPv4(String s) =>
-      hasMatch(s, r'^(?:(?:^|\.)(?:2(?:5[0-5]|[0-4]\d)|1?\d?\d)){4}$');
+  static bool isIPv4(String s) => hasMatch(s, r'^(?:(?:^|\.)(?:2(?:5[0-5]|[0-4]\d)|1?\d?\d)){4}$');
 
   /// Checks if string is IPv6.
   static bool isIPv6(String s) => hasMatch(s,
@@ -250,8 +249,7 @@ class GetUtils {
 
   /// Checks if string is hexadecimal.
   /// Example: HexColor => #12F
-  static bool isHexadecimal(String s) =>
-      hasMatch(s, r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$');
+  static bool isHexadecimal(String s) => hasMatch(s, r'^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$');
 
   /// Checks if string is Palindrome.
   static bool isPalindrome(String string) {
@@ -302,8 +300,7 @@ class GetUtils {
   }
 
   /// Checks if string is Passport No.
-  static bool isPassport(String s) =>
-      hasMatch(s, r'^(?!^0+$)[a-zA-Z0-9]{6,9}$');
+  static bool isPassport(String s) => hasMatch(s, r'^(?!^0+$)[a-zA-Z0-9]{6,9}$');
 
   /// Checks if string is Currency.
   static bool isCurrency(String s) => hasMatch(s,
@@ -369,8 +366,7 @@ class GetUtils {
       return false;
     }
 
-    return isLengthGreaterOrEqual(value, minLength) &&
-        isLengthLessOrEqual(value, maxLength);
+    return isLengthGreaterOrEqual(value, minLength) && isLengthLessOrEqual(value, maxLength);
   }
 
   /// Checks if a contains b (Treating or interpreting upper- and lowercase
@@ -524,8 +520,7 @@ class GetUtils {
       return null;
     }
 
-    final separatedWords =
-        value.split(RegExp(r'[!@#<>?":`~;[\]\\|=+)(*&^%-s_]+'));
+    final separatedWords = value.split(RegExp(r'[!@#<>?":`~;[\]\\|=+)(*&^%-s_]+'));
     var newString = '';
 
     for (final word in separatedWords) {
@@ -566,9 +561,7 @@ class GetUtils {
     if (isNullOrBlank(text)!) {
       return null;
     }
-    return _groupIntoWords(text!)
-        .map((word) => word.toLowerCase())
-        .join(separator);
+    return _groupIntoWords(text!).map((word) => word.toLowerCase()).join(separator);
   }
 
   /// param-case

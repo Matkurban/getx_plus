@@ -1,6 +1,6 @@
 name: getx_plus
 description: Open screens/snackbars/dialogs without context, manage states and inject dependencies easily with GetX.
-version: 4.7.5
+version: 4.7.6
 homepage: https://github.com/jonataslaw/getx
 repository: https://github.com/Matkurban/getx_plus.git
 topics:

@@ -1,3 +1,6 @@
+## 4.7.6
+- fix: Fix Github https://github.com/jonataslaw/getx/issues/3383 Issues
+
 ## 4.7.5
 - fix: Fix compilation errors
 
