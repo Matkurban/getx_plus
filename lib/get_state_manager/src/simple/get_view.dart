@@ -1,8 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:getx_plus/instance_manager.dart';
-import 'package:getx_plus/utils.dart';
-
-import 'get_state.dart';
+import 'package:getx_plus/get.dart';
 import 'get_widget_cache.dart';
 
 /// GetView is a great way of quickly access your Controller

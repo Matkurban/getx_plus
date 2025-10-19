@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-
-import '../../../get.dart';
+import 'package:getx_plus/get.dart';
 
 class GetInformationParser extends RouteInformationParser<RouteDecoder> {
   factory GetInformationParser.createInformationParser(

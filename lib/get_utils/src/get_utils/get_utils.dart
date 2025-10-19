@@ -520,7 +520,15 @@ class GetUtils {
       return null;
     }
 
-    final separatedWords = value.split(RegExp(r'[!@#<>?":`~;[\]\\|=+)(*&^%-s_]+'));
+    final separatedWords = value
+        .split(RegExp(r'[!@#<>?":`~;[\]\\|=+)(*&^%\-\s_]+'))
+        .where((word) => word.isNotEmpty)
+        .toList();
+
+    if (separatedWords.isEmpty) {
+      return null;
+    }
+
     var newString = '';
 
     for (final word in separatedWords) {

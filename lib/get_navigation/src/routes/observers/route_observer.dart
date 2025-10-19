@@ -1,10 +1,7 @@
 import 'package:flutter/widgets.dart';
-
-import '../../../../get_core/get_core.dart';
-import '../../../../instance_manager.dart';
-import '../../../get_navigation.dart';
-import '../../dialog/dialog_route.dart';
-import '../../router_report.dart';
+import 'package:getx_plus/get.dart';
+import 'package:getx_plus/get_navigation/src/dialog/dialog_route.dart';
+import 'package:getx_plus/get_navigation/src/router_report.dart';
 
 /// Extracts the name of a route based on it's instance type
 /// or null if not possible.

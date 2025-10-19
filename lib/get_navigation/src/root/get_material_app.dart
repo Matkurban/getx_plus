@@ -1,10 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:getx_plus/instance_manager.dart';
+import 'package:getx_plus/get.dart';
 
-import '../../../get_state_manager/get_state_manager.dart';
-import '../../../get_utils/get_utils.dart';
-import '../../get_navigation.dart';
 import 'get_root.dart';
 
 class GetMaterialApp extends StatelessWidget {

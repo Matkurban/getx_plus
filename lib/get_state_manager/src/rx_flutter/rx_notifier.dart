@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:getx_plus/get_instance/src/lifecycle.dart';
 import 'package:getx_plus/get_rx/src/rx_types/rx_types.dart';
 import 'package:getx_plus/get_state_manager/get_state_manager.dart';
 import 'package:getx_plus/get_state_manager/src/simple/list_notifier.dart';
-import 'package:getx_plus/instance_manager.dart';
-import 'package:getx_plus/utils.dart';
+import 'package:getx_plus/get_utils/src/equality/equality.dart';
 
 extension _Empty on Object {
   bool _isEmpty() {

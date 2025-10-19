@@ -1,6 +1,5 @@
 import 'package:flutter/widgets.dart';
-
-import '../../../route_manager.dart';
+import 'package:getx_plus/get.dart';
 
 extension PageArgExt on BuildContext {
   RouteSettings? get settings {

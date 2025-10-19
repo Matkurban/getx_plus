@@ -1,3 +1,6 @@
+## 4.7.7
+- fix: Always import 'package:getx_plus/get.dart'  using GetX  package.
+
 ## 4.7.6
 - fix: Fix Github https://github.com/jonataslaw/getx/issues/3383 Issues
 

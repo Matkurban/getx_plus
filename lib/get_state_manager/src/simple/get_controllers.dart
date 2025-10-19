@@ -1,9 +1,8 @@
 import 'package:flutter/widgets.dart';
+import 'package:getx_plus/get_core/src/flutter_engine.dart';
+import 'package:getx_plus/get_instance/src/lifecycle.dart';
 import 'package:getx_plus/get_state_manager/src/rx_flutter/rx_notifier.dart';
-import 'package:getx_plus/instance_manager.dart';
-
 import 'list_notifier.dart';
-
 /// A base controller class that provides state management functionality.
 ///
 /// Extend this class to create a controller that can be used with GetX's

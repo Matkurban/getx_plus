@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:getx_plus/utils.dart';
+import 'package:getx_plus/get.dart';
 
 void main() {
   num x = 5;

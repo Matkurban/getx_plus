@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../../instance_manager.dart';
-import '../router_report.dart';
+import 'package:getx_plus/get.dart';
+import 'package:getx_plus/get_navigation/src/router_report.dart';
 
 class Dependencies {
   void lazyPut<S>(InstanceBuilderCallback<S> builder,

@@ -2,10 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../../../get_instance/src/bindings_interface.dart';
-import '../../../get_utils/src/platform/platform.dart';
-import '../../../route_manager.dart';
+import 'package:getx_plus/get.dart';
 
 class GetDelegate extends RouterDelegate<RouteDecoder>
     with
