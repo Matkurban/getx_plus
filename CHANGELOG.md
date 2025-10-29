@@ -1,3 +1,6 @@
+## 4.8.1
+- Upgrade go_router version to 16.3.0
+
 ## 4.8.0
 - fix: Replace routing management with go_router
 
